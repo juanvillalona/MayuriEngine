@@ -33,7 +33,7 @@ public class Renderer {
 	public void setPixel(int x , int y, int value) {
 		
 		//if we are out of bounds or our value is set to the default value of the shade
-		if( x < 0 || x >= pW || y < 0 || y >= pH || value == 0xffff00ff ) {
+		if( x < 0 || x >= pW || y < 0 || y >= pH || ((value >> 24) & 0xff) == 0) {
 			return;
 		}
 		//convert our 2dimensional number to a one dimensional number
@@ -107,8 +107,6 @@ public class Renderer {
 				int newWidth = image.getTileWidth();
 				int newHeight = image.getTileHeight();
 				
-
-				
 				//clipping code
 				if(offX < 0) newX -= offX;
 				if(offY < 0) newY -= offY;
@@ -118,6 +116,45 @@ public class Renderer {
 				for(int y = newY; y < newHeight; y++) {
 					for(int x = newX; x < newWidth; x++) {
 						setPixel(x + offX, y+ offY, image.getPixel()[(x + tileX * image.getTileWidth()) + (y + tileY * image.getTileHeight()) * image.getWidth()]);
+			}
+		}
+	}
+	
+	public void drawRect(int offX , int offY, int width, int height, int color) {
+		
+		for(int y = 0; y <= height; y++) {
+			setPixel(offX, y + offY, color); //left line of rectangle
+			setPixel(offX + width, y + offY, color); //right line of rectangle
+		}
+		
+		for(int x = 0; x <= width; x++) {
+			setPixel(x + offX, offY , color);//top line
+			setPixel(x + offX, offY + height, color); //bottom line
+		}
+	}
+	
+	public void drawFillRect(int offX, int offY, int width, int height, int color) {
+		//dont render code
+		if(offX < -width) return;
+		if(offY < -height) return;
+		if(offX >= pW) return;
+		if(offY >= pH) return;
+		
+		//declare the variables down here because theres no reason to declare variables if the code won't render anyway
+		int newX = 0;
+		int newY = 0;
+		int newWidth = width;
+		int newHeight = height;
+		
+		//clipping code
+		if(offX < 0) newX -= offX;
+		if(offY < 0) newY -= offY;
+		if(newWidth + offX >= pW) newWidth -= newWidth + offX - pW;
+		if(newHeight + offY > pH) newHeight -= newHeight + offY - pH;
+		
+		for (int y = newY; y <= newHeight; y++) {
+			for (int x = newX; x <= newWidth; x++) {
+				setPixel(x + offX, y + offY, color);
 			}
 		}
 	}

@@ -14,11 +14,13 @@ import com.mayuri.engine.gfx.imageTile;
 public class GameManager extends AbstractGame{
 	
 	private imageTile image;
+	//private image image;
 	private soundClip clip;
+	
 
 	public GameManager() {
 		
-		image = new imageTile("/imageTileTest.png", 16, 16);
+		image = new imageTile("/gokuleft_0.png", 16, 16);
 		try {
 			clip = new soundClip("/Audio/test.wav");
 			clip.setVolume(-20); //decibals
@@ -32,9 +34,9 @@ public class GameManager extends AbstractGame{
 		if(gc.getInput().isKeyDown(KeyEvent.VK_A)) {
 			clip.play();
 		}
-		temp += dt * 20;
+		temp += dt * 10;
 		
-		if(temp > 3) {
+		if(temp > 9) {
 			temp = 0;
 		}
 	}
@@ -43,13 +45,20 @@ public class GameManager extends AbstractGame{
 	@Override
 	public void render(gameContainer gc, Renderer r) {
 		
-		r.drawImageTile(image, gc.getInput().getMouseX() - 8, gc.getInput().getMouseY() - 16, (int)temp , 0);
+		r.drawImage(image, gc.getInput().getMouseX()-10, gc.getInput().getMouseY()-10);
+		//r.drawImageTile(image, gc.getInput().getMouseX() - 8, gc.getInput().getMouseY() - 16, (int)temp , 0);
+		//r.drawFillRect(gc.getInput().getMouseX() - 200, gc.getInput().getMouseY() - 200, 400, 400, 0xffffccff);
+		
+		
 		
 	}
 	
 	public static void main(String args[]) {
 		
 		gameContainer gc = new gameContainer(new GameManager());
+		gc.setWidth(320);
+		gc.setHeight(240);
+		gc.setScale(3f);
 		gc.start();
 	}
 
